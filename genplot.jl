@@ -7,7 +7,7 @@ const PEAK_FP32_FLOPS = 26.5E12::Float64
 const PEAK_BW         = 1.6E12::Float64 # TB/s 1 GCN
 const TITLESIZE = 12
 const TEXTSIZE = 8
-const P3Name = "void Kokkos::Experimental::Impl::hip_parallel_launch_constant_memory<Kokkos::Impl::ParallelFor<scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::p3_main(scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3PrognosticState const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3DiagnosticInputs const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3DiagnosticOutputs const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3Infrastructure const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3HistoryOnly const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3LookupTables const&, ekat::WorkspaceManager<ekat::Pack<double, 1>, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> > const&, int, int)::{lambda(Kokkos::Impl::HIPTeamMember const&)#1}, Kokkos::TeamPolicy<Kokkos::Experimental::HIP>, Kokkos::Experimental::HIP> >() [clone .kd]"
+const kernelName = "void Kokkos::Experimental::Impl::hip_parallel_launch_constant_memory<Kokkos::Impl::ParallelFor<scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::p3_main(scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3PrognosticState const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3DiagnosticInputs const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3DiagnosticOutputs const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3Infrastructure const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3HistoryOnly const&, scream::p3::Functions<double, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> >::P3LookupTables const&, ekat::WorkspaceManager<ekat::Pack<double, 1>, Kokkos::Device<Kokkos::Experimental::HIP, Kokkos::Experimental::HIPSpace> > const&, int, int)::{lambda(Kokkos::Impl::HIPTeamMember const&)#1}, Kokkos::TeamPolicy<Kokkos::Experimental::HIP>, Kokkos::Experimental::HIP> >() [clone .kd]"
 
 # The input CSV has following columns
 # KernelName,Etime,Etime share,FP32_FLOPS,FP64_FLOPS,FP32_FLOPS_PER_SEC,FP64_FLOPS_PER_SEC,Bytes_Write,Bytes_Read,FP32_AI,FP64_AI
@@ -35,7 +35,7 @@ function main()
             if !(row.FP32_FLOPS_PER_SEC isa Missing) && (row.FP32_FLOPS_PER_SEC != 0.0)
                 push!(fp32_flops, (row.Etime, row.FP32_FLOPS_PER_SEC))
                 push!(fp32_ai, (row.Etime, row.FP32_AI))
-                if startswith(row.KernelName, P3Name)
+                if startswith(row.KernelName, kernelName)
                     push!(p3_fp32_flops, (row.Etime, row.FP32_FLOPS_PER_SEC))
                     push!(p3_fp32_ai, (row.Etime, row.FP32_AI))
                 end
@@ -44,7 +44,7 @@ function main()
             if !(row.FP64_FLOPS_PER_SEC isa Missing) && (row.FP64_FLOPS_PER_SEC != 0.0)
                 push!(fp64_flops, (row.Etime, row.FP64_FLOPS_PER_SEC))
                 push!(fp64_ai, (row.Etime, row.FP64_AI))
-                if startswith(row.KernelName, P3Name)
+                if startswith(row.KernelName, kernelName)
                     push!(p3_fp64_flops, (row.Etime, row.FP64_FLOPS_PER_SEC))
                     push!(p3_fp64_ai, (row.Etime, row.FP64_AI))
                 end
